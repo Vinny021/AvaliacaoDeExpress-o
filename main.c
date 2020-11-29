@@ -1,61 +1,62 @@
-// C program to evaluate value of a postfix expression 
 #include <stdio.h> 
 #include <string.h> 
 #include <ctype.h> 
 #include <stdlib.h> 
 
-// Stack type 
-struct Stack 
+// Pilha type 
+struct pilha 
 { 
-	int top; 
-	unsigned capacity; 
+	int inicio; 
+	unsigned qtd_char; 
 	int* array; 
 }; 
 
-// Stack Operations 
-struct Stack* createStack( unsigned capacity ) 
+typedef struct pilha Pilha;
+
+// Pilha Operations 
+Pilha* cria_pilha( unsigned qtd_char ) 
 { 
-	struct Stack* stack = (struct Stack*) malloc(sizeof(struct Stack)); 
+	Pilha* stack = (Pilha*) malloc(sizeof(Pilha)); 
 
 	if (!stack) return NULL; 
 
-	stack->top = -1; 
-	stack->capacity = capacity; 
-	stack->array = (int*) malloc(stack->capacity * sizeof(int)); 
+	stack->inicio = -1; 
+	stack->qtd_char = qtd_char; 
+	stack->array = (int*) malloc(stack->qtd_char * sizeof(int)); 
 
 	if (!stack->array) return NULL; 
 
 	return stack; 
 } 
 
-int isEmpty(struct Stack* stack) 
+int isEmpty(Pilha* stack) 
 { 
-	return stack->top == -1 ; 
+	return stack->inicio == -1 ; 
 } 
 
-char peek(struct Stack* stack) 
+char peek(Pilha* stack) 
 { 
-	return stack->array[stack->top]; 
+	return stack->array[stack->inicio]; 
 } 
 
-char pop(struct Stack* stack) 
+char pop(Pilha* stack) 
 { 
 	if (!isEmpty(stack)) 
-		return stack->array[stack->top--] ; 
+		return stack->array[stack->inicio--] ; 
 	return '$'; 
 } 
 
-void push(struct Stack* stack, char op) 
+void push(Pilha* stack, char op) 
 { 
-	stack->array[++stack->top] = op; 
+	stack->array[++stack->inicio] = op; 
 } 
 
 
 // The main function that returns value of a given postfix expression 
 int evaluatePostfix(char* exp) 
 { 
-	// Create a stack of capacity equal to expression size 
-	struct Stack* stack = createStack(strlen(exp)); 
+	// Create a stack of qtd_char equal to expression size 
+	Pilha* stack = cria_pilha(strlen(exp)); 
 	int i; 
 
 	// See if stack was created successfully 
