@@ -3,98 +3,111 @@
 #include <ctype.h> 
 #include <stdlib.h> 
 
-// Pilha type 
+// Estrutura da pilha
 struct pilha 
 { 
-	int inicio; 
-	unsigned qtd_char; 
-	int* array; 
+	int index_topo; 
+	int qtd_char; 
+	int* elemento; 
 }; 
 
 typedef struct pilha Pilha;
-
-// Pilha Operations 
-Pilha* cria_pilha( unsigned qtd_char ) 
+ 
+Pilha* cria_pilha( int qtd_char ) 
 { 
-	Pilha* stack = (Pilha*) malloc(sizeof(Pilha)); 
+	Pilha* pi = (Pilha*) malloc(sizeof(Pilha)); 
 
-	if (!stack) return NULL; 
+	if (!pi) return NULL; 
 
-	stack->inicio = -1; 
-	stack->qtd_char = qtd_char; 
-	stack->array = (int*) malloc(stack->qtd_char * sizeof(int)); 
+	pi->index_topo = -1; 
+	pi->qtd_char = qtd_char; 
+	pi->elemento = (int*) malloc(pi->qtd_char * sizeof(int)); 
 
-	if (!stack->array) return NULL; 
+	if (!pi->elemento) return NULL; 
 
-	return stack; 
+	return pi; 
 } 
 
-int isEmpty(Pilha* stack) 
+int esta_vazio(Pilha* pi) 
 { 
-	return stack->inicio == -1 ; 
+	return pi->index_topo == -1 ; 
 } 
 
-char peek(Pilha* stack) 
+char retorna_topo(Pilha* pi) 
 { 
-	return stack->array[stack->inicio]; 
+	return pi->elemento[pi->index_topo]; 
 } 
 
-char pop(Pilha* stack) 
+//Retira elemento da pilha e retorna ele para ser utilizado
+char remove_elemento(Pilha* pi) 
 { 
-	if (!isEmpty(stack)) 
-		return stack->array[stack->inicio--] ; 
+	if (!esta_vazio(pi)) 
+		return pi->elemento[pi->index_topo--] ; 
 	return '$'; 
 } 
 
-void push(Pilha* stack, char op) 
+//Recebem uma operação e retorna o resultado
+void resolve_conta(Pilha* pi, char op) 
 { 
-	stack->array[++stack->inicio] = op; 
+	pi->elemento[++pi->index_topo] = op; 
 } 
 
 
-// The main function that returns value of a given postfix expression 
-int evaluatePostfix(char* exp) 
+// Função principal que recebe um vetor char e realiza a resolução
+int avalia_expressao(char* exp) 
 { 
-	// Create a stack of qtd_char equal to expression size 
-	Pilha* stack = cria_pilha(strlen(exp)); 
+	// Cria uma Pilha com base no tamanho da expressão 
+	Pilha* pi = cria_pilha(strlen(exp)); 
 	int i; 
 
-	// See if stack was created successfully 
-	if (!stack) return -1; 
+	// Verifica se foi criada corretamente 
+	if (!pi) return -1; 
 
-	// Scan all characters one by one 
-	for (i = 0; exp[i]; ++i) 
+	// Lê cada um dos caracteres 
+	for (i = 0; exp[i]; i++) 
 	{ 
-		// If the scanned character is an operand (number here), 
-		// push it to the stack. 
-		if (isdigit(exp[i])) 
-			push(stack, exp[i] - '0'); 
+		//Verifica se o caracter é um numero 
+		if (isdigit(exp[i]))
 
-		// If the scanned character is an operator, pop two 
-		// elements from stack apply the operator 
+      //Através da operação transforma em inteiro e adiciona na pilha 
+			resolve_conta(pi, exp[i] - '0'); 
+
+		//Caso em que o caracter é uma operação
 		else
 		{ 
-			int val1 = pop(stack); 
-			int val2 = pop(stack); 
+      //Remove os dois numeros do topo e salva eles em variaveis
+			int val1 = remove_elemento(pi); 
+			int val2 = remove_elemento(pi); 
+
+      //Analisa qual foi a operação requisitada e realiza ela
 			switch (exp[i]) 
 			{ 
-			case '+': push(stack, val2 + val1); break; 
-			case '-': push(stack, val2 - val1); break; 
-			case '*': push(stack, val2 * val1); break; 
-			case '/': push(stack, val2/val1); break; 
+			case '+': 
+        resolve_conta(pi, val2 + val1);
+        break; 
+			case '-': 
+        resolve_conta(pi, val2 - val1);
+        break; 
+			case '*': 
+        resolve_conta(pi, val2 * val1); 
+        break; 
+			case '/': 
+        resolve_conta(pi, val2/val1); 
+        break; 
 			} 
 		} 
-	} 
-	return pop(stack); 
+	}
+  //Remove o ultimo elemento(Resultado) e retorna ele
+	return remove_elemento(pi); 
 } 
-
-// Driver program to test above functions 
+ 
 int main() 
 { 
   char exp[100];
+  
   printf("Digite a expressão: ");
 	scanf("%s", exp);
 
-	printf ("Resultado: %d\n", evaluatePostfix(exp)); 
+	printf ("Resultado: %d\n", avalia_expressao(exp)); 
 	return 0; 
 } 
