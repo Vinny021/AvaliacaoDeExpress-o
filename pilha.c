@@ -141,7 +141,9 @@ char* codificador(char* infix){
   do
   {
     char aux = remove_caracter(A);
-    adiciona_caracter(B, aux);
+    if(aux != '('){
+      adiciona_caracter(B, aux);
+    }
   }while(A->index_topo != -1);
 
   return B->caracter;
