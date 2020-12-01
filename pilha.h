@@ -14,3 +14,6 @@ void resolve_conta(Pilha* pi, char op);
 
 //Função responsável por receber a expressão e chamar as outras funções
 int avalia_expressao(char* exp);
+
+//Função que vai codificar a expressão infixa para posfixa
+char* codificador(char* infix);

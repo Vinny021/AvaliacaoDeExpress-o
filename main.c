@@ -9,6 +9,7 @@ int main()
 { 
   int op;
   char* exp;
+  char *posfix;
   
   do{
     printf("=== Avaliação de Expressões ===\n");
@@ -20,7 +21,9 @@ int main()
       printf("Digite a expressão: ");
 	    scanf("%s", exp);
 
-	    printf ("Resultado: %d\n", avalia_expressao(exp));
+      posfix = codificador(exp);
+
+	    printf ("\nResultado: %d\n\n", avalia_expressao(posfix));
     }  
   }while(op != 2);
   printf("Até mais!\n");
