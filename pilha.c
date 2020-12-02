@@ -2,6 +2,7 @@
 #include <string.h> 
 #include <ctype.h> 
 #include <stdlib.h>
+#include <math.h>
 
 #include "pilha.h"
 
@@ -59,7 +60,11 @@ char remove_caracter(Pilha* pi)
 //Função que verifica a precedencia das funções
 int precedencia(char item)
 {
-  if(item == '*' || item == '/'){
+  if (item == '$'){
+    return 3;
+
+  }
+  else if(item == '*' || item == '/'){
     return 2;
   }
 
@@ -110,7 +115,7 @@ char* codificador(char* infix){
       }
       else
       {
-        if(infix[i] == '+' || infix[i] == '-' || infix[i] == '*' || infix[i] == '/')
+        if(infix[i] == '+' || infix[i] == '-' || infix[i] == '*' || infix[i] == '/' || infix[i] == '$')
         {
           if(precedencia(infix[i]) <= precedencia(A->caracter[A->index_topo]))
           {
@@ -189,7 +194,9 @@ int avalia_expressao(char* exp)
         break; 
 			case '/': 
         resolve_conta(pi, val2/val1); 
-        break; 
+        break;
+      case '$':
+        resolve_conta(pi, pow(val2, val1)); 
 			} 
 		} 
 	}

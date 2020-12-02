@@ -17,6 +17,7 @@ int main()
     printf("2 - Sair\n");
     printf("Sua escolha: ");
     scanf("%d", &op);
+    
     if(op == 1){
       printf("Digite a expressão: ");
 	    scanf("%s", exp);
